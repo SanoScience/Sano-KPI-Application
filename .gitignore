@@ -1,0 +1,40 @@
+# dependencies
+kpi_dashboard/node_modules
+kpi_dashboard/.pnp
+kpi_dashboard/.pnp.*
+kpi_dashboard/.yarn/*
+!kpi_dashboard/.yarn/patches
+!kpi_dashboard/.yarn/plugins
+!kpi_dashboard/.yarn/releases
+!kpi_dashboard/.yarn/versions
+
+# testing
+kpi_dashboard/coverage
+
+# next.js
+kpi_dashboard/.next/
+kpi_dashboard/out/
+
+# production
+kpi_dashboard/build
+
+# misc
+kpi_dashboard/.DS_Store
+kpi_dashboard/*.pem
+
+# debug
+kpi_dashboard/npm-debug.log*
+kpi_dashboard/yarn-debug.log*
+kpi_dashboard/yarn-error.log*
+kpi_dashboard/.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+kpi_dashboard/.env*
+
+# vercel
+kpi_dashboard/.vercel
+
+# typescript
+kpi_dashboard/*.tsbuildinfo
+kpi_dashboard/next-env.d.ts
+
