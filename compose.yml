@@ -1,0 +1,8 @@
+services:
+    kpi-dashboard-prod:
+        container_name: "kpi-dashboard-prod"
+        image: anowaksano/whatever:kpi-dashboard
+        ports:
+            - "3010:3010"
+        environment:
+            - NODE_ENV=production

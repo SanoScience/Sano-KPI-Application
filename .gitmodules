@@ -1,0 +1,3 @@
+[submodule "KPI-Dashboard"]
+	path = KPI-Dashboard
+	url = /home/an/dashboard/kpi_dashboard/
