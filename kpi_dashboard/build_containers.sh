@@ -1,0 +1,1 @@
+docker buildx build -t kpi-dashboard-prod:1.0 --platform linux/amd64 .

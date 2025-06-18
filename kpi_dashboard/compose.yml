@@ -1,0 +1,11 @@
+services:
+    kpi-dashboard-prod:
+        container_name: "kpi-dashboard-prod"
+        image: kpi-dashboard-prod:1.0
+        ports:
+            - "3010:3000"
+        environment:
+            - NODE_ENV=production
+            - API_HOST=pubdb:3000
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
