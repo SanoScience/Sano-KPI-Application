@@ -1,8 +1,32 @@
 services:
-    kpi-dashboard-prod:
-        container_name: "kpi-dashboard-prod"
-        image: anowaksano/whatever:kpi-dashboard
-        ports:
-            - "3010:3010"
-        environment:
-            - NODE_ENV=production
+  postgres:
+    restart: unless-stopped
+    image: postgres:14.2
+    environment:
+      - POSTGRES_USER=pubdb
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - kpi-postgres:/var/lib/postgresql/data
+
+  pubdb:
+    restart: unless-stopped
+    build: ./SanoPublicationDB
+    environment:
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - PUBDB_DATABASE_HOST=postgres
+      - PUBDB_DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - 80
+
+  kpi-dashboard-prod:
+    restart: unless-stopped
+    container_name: "kpi-dashboard-prod"
+    build: ./kpi_dashboard
+    ports:
+      - "3010:3000"
+    environment:
+      - NODE_ENV=production
+      - API_HOST=pubdb:3000
+
+volumes:
+  kpi-postgres:

@@ -28,7 +28,8 @@ kpi_dashboard/yarn-debug.log*
 kpi_dashboard/yarn-error.log*
 kpi_dashboard/.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
+.env
 kpi_dashboard/.env*
 
 # vercel
