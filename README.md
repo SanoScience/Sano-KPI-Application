@@ -18,6 +18,10 @@ POSTGRES_PASSWORD=*your postgres password*
 RAILS_MASTER_KEY=*your rails master key*
 ```
 
+Postgres password may be any random character sequence, you can generate it with a secure random password generator.
+
+Rails master key can be generated using `rails credentials:edit` in the application root folder `../SanoPublicationDB`.
+
 After setting up the environment, run:
 
 ```
