@@ -1,3 +1,5 @@
 [submodule "SanoPublicationDB"]
 	path = SanoPublicationDB
 	url = https://github.com/SanoScience/SanoPublicationDB.git
+[submodule "SanoPublicationDB/"]
+	branch = main

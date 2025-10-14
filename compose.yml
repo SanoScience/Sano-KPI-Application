@@ -15,8 +15,19 @@ services:
       - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
       - PUBDB_DATABASE_HOST=postgres
       - PUBDB_DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+      - PUBDB_DATABASE_USERNAME=${PUBDB_DATABASE_USERNAME}
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - ENTRA_CLIENT_ID=${ENTRA_CLIENT_ID}
+      - ENTRA_CLIENT_SECRET=${ENTRA_CLIENT_SECRET}
+      - ENTRA_TENANT_ID=${ENTRA_TENANT_ID}
+      - BACKUP_PATH=${BACKUP_PATH}
+      - OUTLOOK_USERNAME=${OUTLOOK_USERNAME}
+      - OUTLOOK_PASSWORD=${OUTLOOK_PASSWORD}
+      - AZCOPY_LINK=${AZCOPY_LINK}
+      - VIRTUAL_HOST=kpi.sano.science
+      - VIRTUAL_PORT=3000
     ports:
-      - 80
+      - "3000:3000"
 
   kpi-dashboard-prod:
     restart: unless-stopped
@@ -28,5 +39,23 @@ services:
       - NODE_ENV=production
       - API_HOST=pubdb:3000
 
+        #  nginx-proxy:
+        #image: ghcr.io/nginx-proxy/nginx-proxy:1.3.1
+        #container_name: nginx-proxy
+        #restart: unless-stopped
+        #ports:
+        #- "80:80"
+        #- "443:443"
+        #volumes:
+        #- /var/run/docker.sock:/tmp/docker.sock:ro
+        #- ./certs:/etc/nginx/certs:ro
+        #- nginx-vhost:/etc/nginx/vhost.d
+        #- nginx-html:/usr/share/nginx/html
+        #labels:
+        #- com.github.nginx-proxy.nginx
+
 volumes:
   kpi-postgres:
+  nginx-certs:
+  nginx-vhost:
+  nginx-html:
