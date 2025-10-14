@@ -39,4 +39,4 @@ kpi_dashboard/.vercel
 kpi_dashboard/*.tsbuildinfo
 kpi_dashboard/next-env.d.ts
 
-certs/
+certs
