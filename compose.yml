@@ -1,3 +1,17 @@
+x-pubdb-env: &pubdb_env
+  - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+  - PUBDB_DATABASE_HOST=postgres
+  - PUBDB_DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+  - PUBDB_DATABASE_USERNAME=${PUBDB_DATABASE_USERNAME}
+  - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+  - ENTRA_CLIENT_ID=${ENTRA_CLIENT_ID}
+  - ENTRA_CLIENT_SECRET=${ENTRA_CLIENT_SECRET}
+  - ENTRA_TENANT_ID=${ENTRA_TENANT_ID}
+  - BACKUP_PATH=${BACKUP_PATH}
+  - OUTLOOK_USERNAME=${OUTLOOK_USERNAME}
+  - OUTLOOK_PASSWORD=${OUTLOOK_PASSWORD}
+  - AZCOPY_LINK=${AZCOPY_LINK}
+
 services:
   postgres:
     restart: unless-stopped
@@ -11,28 +25,31 @@ services:
   pubdb:
     restart: unless-stopped
     build: ./SanoPublicationDB
+    depends_on:
+      - postgres
     environment:
-      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
-      - PUBDB_DATABASE_HOST=postgres
-      - PUBDB_DATABASE_PASSWORD=${POSTGRES_PASSWORD}
-      - PUBDB_DATABASE_USERNAME=${PUBDB_DATABASE_USERNAME}
-      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
-      - ENTRA_CLIENT_ID=${ENTRA_CLIENT_ID}
-      - ENTRA_CLIENT_SECRET=${ENTRA_CLIENT_SECRET}
-      - ENTRA_TENANT_ID=${ENTRA_TENANT_ID}
-      - BACKUP_PATH=${BACKUP_PATH}
-      - OUTLOOK_USERNAME=${OUTLOOK_USERNAME}
-      - OUTLOOK_PASSWORD=${OUTLOOK_PASSWORD}
-      - AZCOPY_LINK=${AZCOPY_LINK}
+      <<: *pubdb_env
       - VIRTUAL_HOST=kpi.sano.science
       - VIRTUAL_PORT=3000
     ports:
       - "3000:3000"
 
+  pubdb-scheduler:
+    restart: unless-stopped
+    build: ./SanoPublicationDB
+    depends_on:
+      - postgres
+    user: "0:0"
+    environment:
+      <<: *pubdb_env
+    command: ["rails/bin/cron"]
+
   kpi-dashboard-prod:
     restart: unless-stopped
     container_name: "kpi-dashboard-prod"
     build: ./kpi_dashboard
+    depends_on:
+      - pubdb
     ports:
       - "3010:3000"
     environment:
