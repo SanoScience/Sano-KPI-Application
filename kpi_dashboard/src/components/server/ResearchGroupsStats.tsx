@@ -5,10 +5,10 @@ type Props = {
 }
 
 const activeResearchGroups = [
-  "Medical Imaging and Robotics",
-  "Extreme-Scale Data and Computing",
+  "Computational Intelligence",
   "Computational Neuroscience",
-  "Personal Health Data Science",
+  "Extreme-Scale Data and Computing",
+  "Medical Imaging and Robotics",
   "Scientific Programmers",
   "Structural and Functional Genomics Group",
 ]
