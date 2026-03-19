@@ -18,11 +18,13 @@ export type JournalConferenceData = {
 }
 
 export type PublicationsByResearchGroupsData = Record<string, number>;
+export type PublicationsByYearData = Record<string, number>;
 
 export type KpiData = {
   publicationsData: PublicationsData;
   journalConferenceData: JournalConferenceData;
   publicationsByResearchGroupsData: PublicationsByResearchGroupsData;
+  publicationsByYearData: PublicationsByYearData;
 }
 
 export async function getKpiData(): Promise<KpiData | null> {
@@ -37,7 +39,8 @@ export async function getKpiData(): Promise<KpiData | null> {
       journalsCount,
       conferencesCount,
       impactFactor,
-      subsidyPoints
+      subsidyPoints,
+      publicationsByYear
     ] = await Promise.all([
       getPublicationsCount(),
       getPublicationsByResearchGroups(),
@@ -48,7 +51,8 @@ export async function getKpiData(): Promise<KpiData | null> {
       getJournalsCount(),
       getConferencesCount(),
       getAverageImpactFactor(),
-      getAverageSubsidyPoints()
+      getAverageSubsidyPoints(),
+      getPublicationsByYear()
     ]);
 
     return {
@@ -66,7 +70,8 @@ export async function getKpiData(): Promise<KpiData | null> {
         impactFactorData: impactFactor,
         subsidyPointsData: subsidyPoints
       },
-      publicationsByResearchGroupsData: publicationsByGroups
+      publicationsByResearchGroupsData: publicationsByGroups,
+      publicationsByYearData: publicationsByYear
     };
   } catch (error) {
     console.error('Error fetching KPI data:', error);
@@ -84,6 +89,11 @@ export async function getPublicationsCount(): Promise<number> {
 
 export async function getPublicationsByResearchGroups(): Promise<PublicationsByResearchGroupsData> {
   const res = await fetch(`${BASE_URL}/statistics/publications_by_research_groups_count`);
+  return res.json();
+}
+
+export async function getPublicationsByYear(): Promise<PublicationsByYearData> {
+  const res = await fetch(`${BASE_URL}/statistics/publications_by_year`);
   return res.json();
 }
 

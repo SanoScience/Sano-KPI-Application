@@ -1,4 +1,5 @@
 import JournalConferenceStats from "@/components/server/JournalConferenceStats";
+import PublicationsByYearStats from "@/components/server/PublicationsByYearStats";
 import PublicationsStats from "@/components/server/PublicationsStats";
 import ResearchGroupsStats from "@/components/server/ResearchGroupsStats";
 import { getKpiData } from "@/lib/server/api";
@@ -29,7 +30,11 @@ export default async function Page() {
             </div>
             <PublicationsStats data={kpiData.publicationsData} />
             <JournalConferenceStats data={kpiData.journalConferenceData} />
-            <ResearchGroupsStats data={kpiData.publicationsByResearchGroupsData} />
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-16 items-start">
+                <ResearchGroupsStats data={kpiData.publicationsByResearchGroupsData} />
+                <PublicationsByYearStats data={kpiData.publicationsByYearData} />
+            </div>
         </>
     )
 }
