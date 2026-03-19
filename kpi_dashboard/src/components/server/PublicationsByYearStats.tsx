@@ -14,7 +14,7 @@ export default function PublicationsByYearStats({ data }: Props) {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Total Sano's Publications by Year</h2>
+      <h2 className="text-2xl font-semibold">Total Sano Publications by Year</h2>
 
       {sortedYears.length > 0 ? (
         <div className="p-2">
