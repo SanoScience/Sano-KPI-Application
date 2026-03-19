@@ -31,7 +31,7 @@ export default async function Page() {
             <PublicationsStats data={kpiData.publicationsData} />
             <JournalConferenceStats data={kpiData.journalConferenceData} />
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-16 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                 <ResearchGroupsStats data={kpiData.publicationsByResearchGroupsData} />
                 <PublicationsByYearStats data={kpiData.publicationsByYearData} />
             </div>
