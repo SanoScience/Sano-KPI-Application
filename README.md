@@ -189,3 +189,56 @@ You can check the addresses of the running services using:
 ```
 docker compose ps
 ```
+
+## Backups
+
+The application is configured to run a backup workflow every `BACKUP_INTERVAL` days (default: 3), keep the latest 15 backup files in the `SanoPublicationDB/backups` folder, upload backup dump files to Azure storage using the `AZCOPY_LINK` environment variable (see [AzCopy configuration](#23-azcopy-configuration-azcopy_link)), and send success or failure email notifications to moderators.
+
+The backup schedule is defined in the `SanoPublicationDB/config/schedule.rb` file:
+
+```ruby
+backup_interval_days = ENV.fetch("BACKUP_INTERVAL", "3").to_i
+
+every backup_interval_days.days, at: "18:05" do
+  rake "backups:backup_and_notify"
+end
+```
+
+The `backups:backup_and_notify` task runs the full backup workflow:
+1. creates a database dump file,
+2. uploads `.dump` files from the `SanoPublicationDB/backups` folder to Azure storage using `azcopy sync`,
+3. removes old local backup files, keeping only the latest 15,
+4. updates local backup healthcheck timestamp files,
+5. sends a success or failure email notification to moderators.
+
+To create only a database dump manually, use the `rails db:backup` task. Environment variables such as `PUBDB_DATABASE_PASSWORD` and `RAILS_ENV` can be used to pass the database password and select the Rails environment. By default, if `RAILS_ENV` is not specified, Rails uses the development environment. For example, to create a backup dump of the production database:
+
+```bash
+RAILS_ENV=production PUBDB_DATABASE_PASSWORD=password rails db:backup
+```
+
+The `db:backup` task creates a `.dump` file in the `SanoPublicationDB/backups` folder using `pg_dump` in custom format.
+
+To run the full backup workflow manually, use the `rails backups:backup_and_notify` task. For example, to run the full workflow in the production environment:
+
+```bash
+RAILS_ENV=production PUBDB_DATABASE_PASSWORD=password AZCOPY_LINK="https://example" rails backups:backup_and_notify
+```
+
+This task creates a new dump file, synchronizes `.dump` files to Azure storage, removes old local backups, updates backup healthcheck markers, and sends an email notification about the result.
+
+To restore a database from a backup, use the `rails db:restore` task. If no backup path is provided, the task restores the latest backup found in the `SanoPublicationDB/backups` folder. Example command to restore the development database from the latest available backup:
+
+```bash
+PUBDB_DATABASE_PASSWORD=password rails db:restore
+```
+
+To restore a specific backup file, pass the path to the dump file as an argument in `[]`. Example command to restore the production database from a specific file:
+
+```bash
+RAILS_ENV=production PUBDB_DATABASE_PASSWORD=password FORCE=1 rails "db:restore[/path/to/file.dump]"
+```
+
+The restore task drops the current database, creates it again, and restores the selected dump using `pg_restore`. In the production environment, the restore task requires `FORCE=1` to prevent accidental database replacement.
+
+Backup healthcheck timestamp files are stored locally in the `SanoPublicationDB/backups` folder. Only `.dump` files are uploaded to Azure storage, so internal workflow marker files are not synchronized to the cloud.
