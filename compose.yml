@@ -12,6 +12,7 @@ x-pubdb-env: &pubdb_env
   OUTLOOK_USERNAME: ${OUTLOOK_USERNAME}
   OUTLOOK_PASSWORD: ${OUTLOOK_PASSWORD}
   AZCOPY_LINK: ${AZCOPY_LINK}
+  BACKUP_INTERVAL: ${BACKUP_INTERVAL}
 
 services:
   postgres:
@@ -48,6 +49,14 @@ services:
       BUNDLE_DEPLOYMENT: "1"
       BUNDLE_WITHOUT: development
     command: ["/rails/bin/cron"]
+    volumes:
+      - pubdb-backups:/rails/backups
+    healthcheck:
+      test: ["CMD", "/rails/bin/backup_healthcheck"]
+      interval: 12h
+      timeout: 10s
+      retries: 1
+      start_period: 10m
 
   kpi-dashboard-prod:
     restart: unless-stopped
@@ -66,3 +75,4 @@ volumes:
   nginx-certs:
   nginx-vhost:
   nginx-html:
+  pubdb-backups:
