@@ -203,7 +203,7 @@ OPENALEX_API_KEY=your_openalex_api_key_here
 
 After setting up the environment, run:
 
-```
+```env
 docker compose up -d --build
 ```
 
@@ -211,7 +211,7 @@ This will build the necessary containers and start the database, frontend dashbo
 
 You can check the addresses of the running services using:
 
-```
+```env
 docker compose ps
 ```
 
