@@ -1,5 +1,11 @@
 # compose.yml
 
+x-pubdb-build: &pubdb_build
+  context: ./SanoPublicationDB
+  args:
+    AZCOPY_DOWNLOAD_URL: ${AZCOPY_DOWNLOAD_URL:?AZCOPY_DOWNLOAD_URL is not set}
+    AZCOPY_SHA256: ${AZCOPY_SHA256:?AZCOPY_SHA256 is not set}
+
 x-pubdb-env: &pubdb_env
   RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
   PUBDB_DATABASE_HOST: postgres
@@ -27,7 +33,7 @@ services:
 
   pubdb:
     restart: unless-stopped
-    build: ./SanoPublicationDB
+    build: *pubdb_build
     depends_on:
       - postgres
     environment:
@@ -39,7 +45,7 @@ services:
 
   pubdb-scheduler:
     restart: unless-stopped
-    build: ./SanoPublicationDB
+    build: *pubdb_build
     depends_on:
       - postgres
     user: "0:0"
